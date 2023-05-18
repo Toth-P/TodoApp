@@ -1,0 +1,16 @@
+services:
+  app:
+    image: todo
+    container_name: todo-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+
+    environment:
+      DATASOURCE_URL: jdbc:h2:mem:tododb
+      DATASOURCE_USERNAME: sa
+      DATASOURCE_PASSWORD: password
+      SECRET_KEY: secret

@@ -1,0 +1,14 @@
+FROM openjdk:11-jre-slim as extractor
+WORKDIR /project
+ADD target/todo-1.0.0-SNAPSHOT.jar /project/
+RUN java -Djarmode=layertools -jar todo-1.0.0-SNAPSHOT.jar extract
+
+
+FROM openjdk:11-jre-slim
+WORKDIR /app
+ADD target/todo-1.0.0-SNAPSHOT.jar /app/
+COPY --from=extractor /project/dependencies/. /app/
+COPY --from=extractor /project/spring-boot-loader/. /app/
+COPY --from=extractor /project/snapshot-dependencies/. /app/
+COPY --from=extractor /project/application/. /app/
+CMD ["java","org.springframework.boot.loader.JarLauncher"]
